@@ -29,9 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\STZ.Generals\STZ.Generals.Shared\STZ.Shared\STZ.Shared.csproj" />
+    <PackageReference Include="STZ.Shared" Version="*" />
   </ItemGroup>
-
-
 
 </Project>
