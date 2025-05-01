@@ -1,0 +1,18 @@
+@using MudBlazor
+@typeparam TItem
+
+<MudStack Row Justify="Justify.Center" Spacing="1">
+    <MudSelect T="TItem" Clearable Label="@Label" Value="SelectedItem" ValueChanged="OnSelectedItemChanged">
+        @foreach (var item in _items)
+        {
+            <MudSelectItem Value="item">
+                @item.GetType().GetProperty(PropertyName)?.GetValue(item, null)
+            </MudSelectItem>
+        }
+    </MudSelect>
+    @if (AddComponentType is not null)
+    {
+        <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Medium" OnClick="@OnAdd" />
+    }
+    <MudIconButton Icon="@Icons.Material.Filled.Refresh" Size="Size.Medium" OnClick="@OnRefresh" />
+</MudStack>

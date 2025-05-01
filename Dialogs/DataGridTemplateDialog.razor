@@ -1,0 +1,15 @@
+@using MudBlazor
+
+<MudDialog>
+    <DialogContent>
+        <DynamicComponent Type="ComponentType" Parameters="ComponentParameters" />
+    </DialogContent>
+</MudDialog>
+
+@code {
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
+    [Parameter] public Type ComponentType { get; set; } = default!;
+    [Parameter] public Dictionary<string, object> ComponentParameters { get; set; } = new();
+
+    private void CloseDialog() => MudDialog.Close(DialogResult.Ok(true));
+}

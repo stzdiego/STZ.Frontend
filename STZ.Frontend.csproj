@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <PackageId>STZ.Frontend</PackageId>
+    <Version>0.0.0-placeholder</Version>
+    <Authors>STZDiego</Authors>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/stzdiego/STZ.Frontend</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Areas\MyFeature\Pages\Page1.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include=".github\workflows\dotnet.yml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\STZ.Generals\STZ.Generals.Shared\STZ.Shared\STZ.Shared.csproj" />
+  </ItemGroup>
+
+
+
+</Project>
