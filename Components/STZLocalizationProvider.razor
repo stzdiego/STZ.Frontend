@@ -1,36 +1,31 @@
 @using STZ.Frontend.Services
 @inject LocalizationService LocalizationService
 
-@code {
-    [Parameter] public Guid CultureId { get; set; }
-    [Parameter] public RenderFragment? ChildContent { get; set; }
+<CascadingValue Value="LocalizationService">
+    @if (_loaded)
+    {
+        @ChildContent
+    }
+    else
+    {
+        <p>Cargando traducciones...</p>
+    }
+</CascadingValue>
 
-    private bool _loaded = false;
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public Guid? InitialCultureId { get; set; }
+
+    private bool _loaded;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender && !_loaded)
         {
+            var cultureId = InitialCultureId ?? LocalizationService.GetDefaultCultureIdAsync();
+            await LocalizationService.LoadResourcesAsync(cultureId);
             _loaded = true;
-
-            try
-            {
-                await LocalizationService.LoadResourcesAsync(CultureId);
-                StateHasChanged();
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine($"[Localization] Error: {ex.Message}");
-            }
+            StateHasChanged();
         }
     }
-}
-
-@if (_loaded)
-{
-    @ChildContent
-}
-else
-{
-    <p>Cargando recursos...</p>
 }

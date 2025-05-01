@@ -1,0 +1,27 @@
+@inject LocalizationService Localization
+@using STZ.Frontend.Services
+@implements IDisposable
+
+<span>@_text</span>
+
+@code {
+    [Parameter] public string Key { get; set; } = string.Empty;
+    private string _text = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        _text = Localization.Get(Key);
+        Localization.OnCultureChanged += HandleCultureChanged;
+    }
+
+    private void HandleCultureChanged()
+    {
+        _text = Localization.Get(Key);
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        Localization.OnCultureChanged -= HandleCultureChanged;
+    }
+}

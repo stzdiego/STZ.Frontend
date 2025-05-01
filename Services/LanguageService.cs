@@ -6,9 +6,9 @@ using STZ.Shared.Entities;
 
 namespace STZ.Frontend.Services;
 
-public class CultureService : ServiceBase<Culture>, ICultureService
+public class LanguageService : ServiceBase<Culture>, ILanguageService
 {
-    public CultureService(HttpClient httpClient, IConfiguration configuration) 
+    public LanguageService(HttpClient httpClient, IConfiguration configuration) 
         : base(httpClient, configuration) {}
 
     public async Task<ResourcesCultureDto> GetResourcesAsync(Guid cultureId)
