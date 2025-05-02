@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using STZ.Frontend.Services;
 using STZ.Shared.Bases;
 
@@ -11,13 +12,28 @@ public static class FrontendServiceConfiguration
     {
         services.AddHttpClient();
         services.AddScoped(typeof(ServiceBase<>));
-        
+
         services.AddScoped<ILanguageService, LanguageService>();
         services.AddHttpClient<ILanguageService, LanguageService>(client =>
-        {
-            client.BaseAddress = new Uri(configuration["ApiSettings:BaseUrl"]
-                                         ?? throw new InvalidOperationException("Base URL no configurada."));
-        });
+            {
+                client.BaseAddress = new Uri(configuration["ApiSettings:BaseUrl"]
+                                             ?? throw new InvalidOperationException("Base URL no configurada."));
+            })
+            .ConfigurePrimaryHttpMessageHandler(provider =>
+            {
+                var env = provider.GetRequiredService<IHostEnvironment>();
+                if (env.IsDevelopment())
+                {
+                    return new HttpClientHandler
+                    {
+                        ServerCertificateCustomValidationCallback =
+                            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                    };
+                }
+
+                return new HttpClientHandler();
+            });
+
         services.AddScoped<LocalizationService>();
     }
 }
