@@ -1,0 +1,28 @@
+@using MudBlazor
+@using STZ.Shared.Entities
+
+<MudForm>
+    <MudGrid>
+        <MudItem xs="12" sm="6">
+            <MudTextField T="string" Label="Cultura" Value="@Item.Culture?.Name" ReadOnly />
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <MudTextField T="string" Label="Recurso" Value="@Item.Resource?.Code" ReadOnly />
+        </MudItem>
+    </MudGrid>
+    
+    <MudItem xs="12" Class="mt-4">
+        <MudTextField T="string" Label="Texto" Lines="4" @bind-Text="Item.Text" Variant="Variant.Outlined" ReadOnly />
+    </MudItem>
+    
+    <MudStack Row Class="mt-4" Justify="Justify.FlexEnd">
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" 
+                   OnClick="() => MudDialog.Close(DialogResult.Ok(Item))">Cerrar</MudButton>
+    </MudStack>
+</MudForm>
+
+@code {
+    [Parameter] public ResourceCulture<Guid, Guid> Item { get; set; } = new();
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
+
+}

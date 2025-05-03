@@ -1,0 +1,22 @@
+@page "/Resources"
+@using Microsoft.AspNetCore.Components.Web
+@using STZ.Frontend.Components
+@using STZ.Frontend.Pages.Administration.Cultures
+@using STZ.Shared.Entities
+@using MudBlazor
+
+<PageTitle><STZText Key="Resources.Title" /></PageTitle>
+
+<STZDataGrid TItem="ResourceCulture<Guid, Guid>" TId="Guid" Title="Resources.Title" 
+             AddComponentType="typeof(Add)"
+             EditComponentType="typeof(Edit)"
+             DetailComponentType="typeof(View)">
+    <Columns>
+        <PropertyColumn T="ResourceCulture<Guid, Guid>" TProperty="string" 
+                        Property="x => x.Resource.Code" 
+                        Title="Código"
+                        Grouping="true" />
+        <PropertyColumn T="ResourceCulture<Guid, Guid>" TProperty="string" Property="x => x.Culture.Code" Title="Cultura" Hideable="false" />
+        <PropertyColumn T="ResourceCulture<Guid, Guid>" TProperty="string" Property="x => x.Text" Title="Texto" Hideable="false" />
+    </Columns>
+</STZDataGrid>

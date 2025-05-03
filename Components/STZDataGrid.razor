@@ -1,12 +1,14 @@
 @typeparam TItem
 @typeparam TId
 @using MudBlazor
+@using STZ.Frontend.Services
+@inject LocalizationService Localization
 
 @if (ShowToolbarTitle)
 {
     <MudPaper Class="py-1 px-2 mt-2">
         <MudStack Row AlignItems="AlignItems.Center">
-            <MudText Typo="Typo.h6">@Title</MudText>
+            <MudText Typo="Typo.h6"><STZText Key="@Title" /></MudText>
             <MudSpacer />
             @if (AddComponentType is not null)
             {
@@ -43,7 +45,7 @@
     <Columns>
         @if (ShowActions)
         {
-            <TemplateColumn Title="Acciones">
+            <TemplateColumn Title="@Localization.Get("Grid.Actions")">
                 <CellTemplate Context="context">
                     @if (DetailComponentType is not null)
                     {

@@ -1,0 +1,28 @@
+@using MudBlazor
+@using STZ.Shared.Entities
+<MudForm ReadOnly>
+    <MudGrid>
+        <MudItem xs="12" sm="6">
+            <MudTextField T="string" Label="Código" Value="@Item.Code" />
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <MudTextField T="string" Label="Nombre" Value="@Item.Name"/>
+        </MudItem>
+        
+        <MudItem xs="12" sm="6">
+            <MudTextField T="DateTime" Label="Fecha creación" Value="@Item.CreatedAt"/>
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <MudTextField T="DateTime?" Label="Fecha actualización" Value="@Item.UpdatedAt"/>
+        </MudItem>
+    </MudGrid>
+    
+    <MudStack Row Class="mt-4" Justify="Justify.FlexEnd">
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="() => MudDialog.Close()">Cerrar</MudButton>
+    </MudStack>
+</MudForm>
+
+@code {
+    [Parameter] public required Culture Item { get; set; }
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
+}

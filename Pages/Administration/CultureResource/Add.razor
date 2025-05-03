@@ -1,0 +1,99 @@
+@using Humanizer.Localisation
+@using MudBlazor
+@using STZ.Frontend.Components
+@using STZ.Shared.Bases
+@using STZ.Shared.Entities
+@inject ServiceBase<ResourceCulture<Guid, Guid>> EntityService
+
+<MudForm>
+    <MudGrid>
+        <MudItem xs="12" sm="6">
+            <STZEntityField TItem="Culture" PropertyName="Code" Label="Cultura" SelectedItemChanged="OnCultureChanged" 
+                            AddComponentType="typeof(Cultures.Add)" SelectedItem="_selectedCulture" />
+        </MudItem>
+        <MudItem xs="12" sm="6">
+            <STZEntityField TItem="Resource" PropertyName="Code" Label="Recurso" SelectedItemChanged="OnResourceChanged"
+                            AddComponentType="typeof(Administration.Resources.Add)" SelectedItem="_selectedResource" />
+            @if (!string.IsNullOrEmpty(_messageError))
+            {
+                <MudText Typo="Typo.overline" Color="Color.Error">@_messageError</MudText>
+            }
+        </MudItem>
+    </MudGrid>
+    
+    @if (_selectedCulture is not null && _selectedResource is not null && _viewText)
+    {
+        <MudItem xs="12" Class="mt-4">
+            <MudTextField T="string" Label="Texto" Lines="4" @bind-Text="Item.Text" Variant="Variant.Outlined" />
+        </MudItem>
+    }
+
+    <MudStack Row Class="mt-4" Justify="Justify.FlexEnd">
+        <MudButton OnClick="() => MudDialog.Cancel()">Cancelar</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="() => MudDialog.Close(DialogResult.Ok(Item))">Crear</MudButton>
+    </MudStack>
+</MudForm>
+
+@code {
+    [Parameter] public ResourceCulture<Guid, Guid> Item { get; set; } = new();
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = default!;
+
+    bool _viewText;
+    private string? _messageError;
+    private Culture? _selectedCulture;
+    private Resource? _selectedResource;
+
+    private async Task LoadResourceText()
+    {
+        if (_selectedCulture is not null && _selectedResource is not null)
+        {
+            _viewText = false;
+            Item.Text = string.Empty;
+            _messageError = string.Empty;
+            
+            var query = $"(CultureId == Guid(\"{_selectedCulture.Id}\") && ResourceId == Guid(\"{_selectedResource.Id}\"))";
+            var response = await EntityService.FindAsync(query);
+
+            if (response.Any())
+            {
+                _messageError = "El texto ya existe para la cultura seleccionada.";
+                StateHasChanged();
+                return;
+            }
+
+            Item.CultureId = _selectedCulture.Id;
+            Item.ResourceId = _selectedResource.Id;
+            _viewText = true;
+            StateHasChanged();
+        }
+    }
+
+    private void OnCultureChanged(Culture? culture)
+    {
+        Item.Text = string.Empty;
+
+        if (culture is null)
+        {
+            _selectedCulture = null;
+            return;
+        }
+        
+        _selectedCulture = culture;
+        _ = LoadResourceText();
+    }
+
+    private void OnResourceChanged(Resource? resource)
+    {
+        Item.Text = string.Empty;
+
+        if (resource is null)
+        {
+            _selectedResource = null;
+            return;
+        }
+        
+        _selectedResource = resource;
+        _ = LoadResourceText();
+    }
+    
+}
