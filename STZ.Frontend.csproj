@@ -21,10 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <UpToDateCheckInput Remove="Areas\MyFeature\Pages\Page1.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Include=".github\workflows\dotnet.yml" />
   </ItemGroup>
 

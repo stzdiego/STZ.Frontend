@@ -1,15 +1,15 @@
 @using MudBlazor
+@using STZ.Frontend.Services
 @typeparam TItem
+@inject LocalizationService Localization
+@implements IDisposable
 
 <MudStack Row Justify="Justify.Center" Spacing="1">
-    <MudSelect T="TItem" Clearable Label="@Label" Value="SelectedItem" ValueChanged="OnSelectedItemChanged">
-        @foreach (var item in _items)
-        {
-            <MudSelectItem Value="item">
-                @item.GetType().GetProperty(PropertyName)?.GetValue(item, null)
-            </MudSelectItem>
-        }
-    </MudSelect>
+    <MudAutocomplete T="TItem" Label="@_label" Placeholder="Buscar..." 
+                     Value="SelectedItem" 
+                     ValueChanged="OnSelectedItemChanged"
+                     ToStringFunc="item => item?.GetType().GetProperty(PropertyName)?.GetValue(item, null)?.ToString()"
+                     SearchFunc="SearchItems" />
     @if (AddComponentType is not null)
     {
         <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Medium" OnClick="@OnAdd" />

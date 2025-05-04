@@ -8,11 +8,11 @@
 <MudForm>
     <MudGrid>
         <MudItem xs="12" sm="6">
-            <STZEntityField TItem="Culture" PropertyName="Code" Label="Cultura" SelectedItemChanged="OnCultureChanged" 
+            <STZEntityField TItem="Culture" PropertyName="Code" Label="General.Culture" SelectedItemChanged="OnCultureChanged" 
                             AddComponentType="typeof(Cultures.Add)" SelectedItem="_selectedCulture" />
         </MudItem>
         <MudItem xs="12" sm="6">
-            <STZEntityField TItem="Resource" PropertyName="Code" Label="Recurso" SelectedItemChanged="OnResourceChanged"
+            <STZEntityField TItem="Resource" PropertyName="Code" Label="General.Resource" SelectedItemChanged="OnResourceChanged"
                             AddComponentType="typeof(Administration.Resources.Add)" SelectedItem="_selectedResource" />
             @if (!string.IsNullOrEmpty(_messageError))
             {
@@ -29,8 +29,8 @@
     }
 
     <MudStack Row Class="mt-4" Justify="Justify.FlexEnd">
-        <MudButton OnClick="() => MudDialog.Cancel()">Cancelar</MudButton>
-        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="() => MudDialog.Close(DialogResult.Ok(Item))">Crear</MudButton>
+        <MudButton OnClick="() => MudDialog.Cancel()"><STZText Key="General.Cancel" /></MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="() => MudDialog.Close(DialogResult.Ok(Item))"><STZText Key="General.Create" /></MudButton>
     </MudStack>
 </MudForm>
 
