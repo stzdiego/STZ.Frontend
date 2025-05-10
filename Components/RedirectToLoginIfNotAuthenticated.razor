@@ -1,0 +1,24 @@
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthStateProvider
+
+<AuthorizeView>
+    <Authorized>
+        <p><STZText Key="Login.NoAuthorized" /></p>
+    </Authorized>
+    <NotAuthorized>
+        @code {
+            protected override async Task OnInitializedAsync()
+            {
+                var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+                var user = authState.User;
+
+                if (user == null || !user.Identity.IsAuthenticated)
+                {
+                    Navigation.NavigateTo("authentication/login", forceLoad: true);
+                }
+            }
+        }
+    </NotAuthorized>
+</AuthorizeView>

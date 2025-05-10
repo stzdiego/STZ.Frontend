@@ -1,0 +1,55 @@
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Authorization
+@using STZ.Frontend.Authorization
+@inject IPermissionService PermissionService
+
+<CascadingAuthenticationState>
+    @if (_isLoading)
+    {
+        @Authorizing
+    }
+    else if (!_hasPermission)
+    {
+        @NotAuthorized
+    }
+    else
+    {
+        <RouteView RouteData="RouteData" DefaultLayout="DefaultLayout" />
+    }
+</CascadingAuthenticationState>
+
+@code {
+    [Parameter] public RouteData RouteData { get; set; }
+    [Parameter] public Type DefaultLayout { get; set; }
+    [Parameter] public RenderFragment Authorizing { get; set; }
+    [Parameter] public RenderFragment NotAuthorized { get; set; }
+
+    [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; }
+
+    private bool _isLoading = true;
+    private bool _hasPermission = true; // Por defecto, se permite el acceso
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _isLoading = true;
+
+        if (RouteData.PageType
+                .GetCustomAttributes(typeof(STZAuthorize), true)
+                .FirstOrDefault() is STZAuthorize attribute)
+        {
+            var authState = await AuthenticationStateTask;
+            var user = authState.User;
+
+            if (user.Identity?.IsAuthenticated ?? false)
+            {
+                _hasPermission = await PermissionService.HasAccessAsync(user, attribute.Feature, attribute.Action);
+            }
+            else
+            {
+                _hasPermission = false;
+            }
+        }
+
+        _isLoading = false;
+    }
+}

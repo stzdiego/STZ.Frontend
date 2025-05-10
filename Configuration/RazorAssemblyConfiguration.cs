@@ -44,11 +44,12 @@ public static class RazorAssemblyConfiguration
             })
             .ToArray();
 
+        /*
         foreach (var asm in result)
         {
             Console.WriteLine($"[RazorAssemblyHelper] Ensamblado con páginas detectado: {asm.FullName}");
         }
-
+        */
         return result;
     }
 }

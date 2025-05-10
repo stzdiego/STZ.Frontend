@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MudBlazor.Services;
 using STZ.Frontend.Services;
 using STZ.Shared.Bases;
 
@@ -11,6 +12,7 @@ public static class FrontendServiceConfiguration
     public static void AddSTZFrontendServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddHttpClient();
+        services.AddMudServices();
         services.AddScoped(typeof(ServiceBase<>));
 
         services.AddScoped<ILanguageService, LanguageService>();
