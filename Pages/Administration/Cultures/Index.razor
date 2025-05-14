@@ -1,8 +1,10 @@
 @page "/Cultures"
+@attribute [STZAuthorize("Cultures")]
 @using Microsoft.AspNetCore.Components.Web
 @using STZ.Frontend.Components
 @using STZ.Shared.Entities
 @using MudBlazor
+@using STZ.Frontend.Authorization
 @using STZ.Frontend.Services
 @inject LocalizationService Localization
 
@@ -10,10 +12,10 @@
 
 <STZDataGrid TItem="Culture" TId="Guid" Title="Cultures.Title" DetailComponentType="typeof(View)" EditComponentType="typeof(Edit)" AddComponentType="typeof(Add)" >
     <Columns>
-        <PropertyColumn T="Culture" TProperty="string" Property="x => x.Code" Title="@Localization.Get("Culture.Code")" Hideable="true"/>
-        <PropertyColumn T="Culture" TProperty="string" Property="x => x.Name" Title="@Localization.Get("Culture.Name")" Hideable="true"/>
-        <PropertyColumn T="Culture" TProperty="Guid" Property="x => x.Id" Title="@Localization.Get("Culture.Id")" Hidden="true" Hideable="true"/>
-        <PropertyColumn T="Culture" TProperty="DateTime" Property="x => x.CreatedAt" Title="@Localization.Get("Culture.CreationDate")" Hideable="true"/>
-        <PropertyColumn T="Culture" TProperty="DateTime?" Property="x => x.UpdatedAt" Title="@Localization.Get("Culture.UpdateDate")" Hidden="true" Hideable="true"/>
+        <STZColumn T="Culture" TProperty="string" Property="x => x.Code" Title="Culture.Code" Hideable="true"/>
+        <STZColumn T="Culture" TProperty="string" Property="x => x.Name" Title="Culture.Name" Hideable="true"/>
+        <STZColumn T="Culture" TProperty="Guid" Property="x => x.Id" Title="Culture.Id" Hidden="true" Hideable="true"/>
+        <STZColumn T="Culture" TProperty="DateTime" Property="x => x.CreatedAt" Title="Culture.CreationDate" Hideable="true"/>
+        <STZColumn T="Culture" TProperty="DateTime?" Property="x => x.UpdatedAt" Title="Culture.UpdateDate" Hidden="true" Hideable="true"/>
     </Columns>
 </STZDataGrid>

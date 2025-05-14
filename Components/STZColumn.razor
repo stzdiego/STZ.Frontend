@@ -1,0 +1,28 @@
+@typeparam T
+@typeparam TProperty
+@using MudBlazor
+@inherits PropertyColumn<T, TProperty>
+
+@code {
+    [Parameter] public string LocalizationKey { get; set; } = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        // Si no se proporcionó una clave de localización, intentar usar Title como clave
+        if (string.IsNullOrEmpty(LocalizationKey) && !string.IsNullOrEmpty(Title))
+        {
+            LocalizationKey = Title;
+        }
+        
+        // Configuramos el encabezado personalizado
+        base.HeaderTemplate = HeaderContent;
+    }
+
+    // Método que define el contenido del encabezado
+    private RenderFragment HeaderContent(object context)
+    {
+        return @<STZText Key="@LocalizationKey" />;
+    }
+}

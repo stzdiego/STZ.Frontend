@@ -12,6 +12,7 @@ public partial class STZDataGrid<TItem, TId> : ComponentBase
     [Inject] public required IDialogService DialogService { get; set; }
     [Inject] public required ISnackbar Snackbar { get; set; }
 
+    [Parameter] public string Feature { get; set; }
     [Parameter] public string Title { get; set; } = "Listado";
     [Parameter] public bool ShowToolbarTitle { get; set; } = true;
     [Parameter] public bool ShowActions { get; set; } = true;
@@ -25,6 +26,20 @@ public partial class STZDataGrid<TItem, TId> : ComponentBase
     private MudDataGrid<TItem> _dataGrid = default!;
     private TItem SelectedItem { get; set; } = default!;
     private string? _searchString;
+    private string _textPlaceHolder = string.Empty;
+
+    protected override Task OnInitializedAsync()
+    {
+        _textPlaceHolder = Localization.Get("General.Search");
+        Localization.OnCultureChanged += HandleCultureChanged;
+        return base.OnInitializedAsync();
+    }
+    
+    private void HandleCultureChanged()
+    {
+        _textPlaceHolder = Localization.Get("General.Search");
+        InvokeAsync(StateHasChanged);
+    }
 
     private async Task<GridData<TItem>> ServerDataFunc(GridState<TItem> state)
     {
@@ -157,5 +172,10 @@ public partial class STZDataGrid<TItem, TId> : ComponentBase
     private void ShowError(string message)
     {
         Snackbar.Add(message, Severity.Error);
+    }
+    
+    public void Dispose()
+    {
+        Localization.OnCultureChanged -= HandleCultureChanged;
     }
 }

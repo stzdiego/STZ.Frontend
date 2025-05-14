@@ -3,16 +3,22 @@
 @using MudBlazor
 @using STZ.Frontend.Services
 @inject LocalizationService Localization
+@implements IDisposable
 
 @if (ShowToolbarTitle)
 {
     <MudPaper Class="py-1 px-2 mt-2">
         <MudStack Row AlignItems="AlignItems.Center">
-            <MudText Typo="Typo.h6"><STZText Key="@Title" /></MudText>
-            <MudSpacer />
+            <MudText Typo="Typo.h6">
+                <STZText Key="@Title"/>
+            </MudText>
+            <MudSpacer/>
             @if (AddComponentType is not null)
             {
-                <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Medium" OnClick="@(() => ShowAddDialog())" />
+                <STZAuthorizeView Feature="@Feature" Action="Add">
+                    <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Medium"
+                                   OnClick="@(() => ShowAddDialog())"/>
+                </STZAuthorizeView>
             }
         </MudStack>
     </MudPaper>
@@ -32,12 +38,12 @@
         @if (ShowSearch)
         {
             <MudTextField T="string"
-                          Placeholder="Buscar"
+                          Placeholder="@_textPlaceHolder"
                           Adornment="Adornment.Start"
                           AdornmentIcon="@Icons.Material.Filled.Search"
                           IconSize="Size.Medium"
                           FullWidth="false"
-                          ValueChanged="@(s => OnSearch(s))" />
+                          ValueChanged="@(s => OnSearch(s))"/>
         }
         <MudSpacer/>
     </ToolBarContent>
@@ -45,19 +51,31 @@
     <Columns>
         @if (ShowActions)
         {
-            <TemplateColumn Title="@Localization.Get("Grid.Actions")">
+            <TemplateColumn>
+                <HeaderTemplate>
+                    <STZText Key="General.Actions"/>
+                </HeaderTemplate>
                 <CellTemplate Context="context">
                     @if (DetailComponentType is not null)
                     {
-                        <MudIconButton Size="Size.Small" Icon="@Icons.Material.Outlined.Visibility" OnClick="@(() => ShowDetailDialog(context.Item))"/>
+                        <STZAuthorizeView Feature="@Feature" Action="View">
+                            <MudIconButton Size="Size.Small" Icon="@Icons.Material.Outlined.Visibility"
+                                           OnClick="@(() => ShowDetailDialog(context.Item))"/>
+                        </STZAuthorizeView>
                     }
                     @if (EditComponentType is not null)
                     {
-                        <MudIconButton Size="Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => ShowEditDialog(context.Item))"/>
+                        <STZAuthorizeView Feature="@Feature" Action="Edit">
+                            <MudIconButton Size="Size.Small" Icon="@Icons.Material.Outlined.Edit"
+                                           OnClick="@(() => ShowEditDialog(context.Item))"/>
+                        </STZAuthorizeView>
                     }
                     @if (ShowDeleteAction)
                     {
-                        <MudIconButton Size="Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => OnDelete(context))"/>
+                        <STZAuthorizeView Feature="@Feature" Action="Delete">
+                            <MudIconButton Size="Size.Small" Icon="@Icons.Material.Outlined.Delete"
+                                           OnClick="@(() => OnDelete(context))"/>
+                        </STZAuthorizeView>
                     }
                 </CellTemplate>
             </TemplateColumn>
@@ -70,6 +88,7 @@
     </Columns>
 
     <PagerContent>
-        <MudDataGridPager T="TItem" />
+        <MudDataGridPager T="TItem"/>
     </PagerContent>
 </MudDataGrid>
+

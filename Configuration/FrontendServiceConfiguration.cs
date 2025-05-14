@@ -15,6 +15,7 @@ public static class FrontendServiceConfiguration
         services.AddMudServices();
         services.AddScoped(typeof(ServiceBase<>));
 
+        services.AddScoped<LoaderService>();
         services.AddScoped<ILanguageService, LanguageService>();
         services.AddHttpClient<ILanguageService, LanguageService>(client =>
             {

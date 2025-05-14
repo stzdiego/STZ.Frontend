@@ -3,20 +3,18 @@
 @using STZ.Frontend.Authorization
 @inject IPermissionService PermissionService
 
-<CascadingAuthenticationState>
-    @if (_isLoading)
-    {
-        @Authorizing
-    }
-    else if (!_hasPermission)
-    {
-        @NotAuthorized
-    }
-    else
-    {
-        <RouteView RouteData="RouteData" DefaultLayout="DefaultLayout" />
-    }
-</CascadingAuthenticationState>
+@if (_isLoading)
+{
+    @Authorizing
+}
+else if (!_hasPermission)
+{
+    @NotAuthorized
+}
+else
+{
+    <RouteView RouteData="RouteData" DefaultLayout="DefaultLayout"/>
+}
 
 @code {
     [Parameter] public RouteData RouteData { get; set; }
@@ -26,17 +24,31 @@
 
     [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; }
 
-    private bool _isLoading = true;
+    private bool _isLoading;
     private bool _hasPermission = true; // Por defecto, se permite el acceso
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Verificamos si el componente requiere autorización
+        var requiresAuthorization = RouteData.PageType
+            .GetCustomAttributes(typeof(STZAuthorize), true)
+            .FirstOrDefault() is STZAuthorize;
+            
+        // Solo activamos la carga si requiere autorización
+        _isLoading = requiresAuthorization;
+    }
 
     protected override async Task OnParametersSetAsync()
     {
-        _isLoading = true;
-
-        if (RouteData.PageType
-                .GetCustomAttributes(typeof(STZAuthorize), true)
-                .FirstOrDefault() is STZAuthorize attribute)
+        // Sólo verificamos la autorización si hay un atributo STZAuthorize
+        var attribute = RouteData.PageType
+            .GetCustomAttributes(typeof(STZAuthorize), true)
+            .FirstOrDefault() as STZAuthorize;
+            
+        if (attribute != null)
         {
+            // Ya se estableció _isLoading = true en OnInitializedAsync
+            
             var authState = await AuthenticationStateTask;
             var user = authState.User;
 
@@ -48,8 +60,15 @@
             {
                 _hasPermission = false;
             }
-        }
 
-        _isLoading = false;
+            _isLoading = false;
+            StateHasChanged();
+        }
+        else
+        {
+            // No requiere autorización
+            _isLoading = false;
+            _hasPermission = true;
+        }
     }
 }

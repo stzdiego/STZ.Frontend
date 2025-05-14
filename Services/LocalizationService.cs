@@ -9,6 +9,7 @@ namespace STZ.Frontend.Services;
 
 public class LocalizationService
 {
+    public bool IsInitialized { get; private set; }
     private readonly ILanguageService _languageService;
     private readonly IConfiguration _configuration;
     private Dictionary<string, string> _resources = new();
@@ -32,6 +33,7 @@ public class LocalizationService
         
         _resources = response.Resources.ToDictionary(r => r.Code, r => r.Text);
         CultureId = cultureId;
+        IsInitialized = true;
         OnCultureChanged?.Invoke();
     }
 

@@ -2,27 +2,25 @@
 @using STZ.Frontend.Authorization
 @inject IPermissionService PermissionService
 
-<CascadingAuthenticationState>
-    @if (isLoading)
+@if (isLoading)
+{
+    @Authorizing
+}
+else if (CanRenderContent)
+{
+    if (Authorized != null)
     {
-        @Authorizing
-    }
-    else if (CanRenderContent)
-    {
-        if (Authorized != null)
-        {
-            @Authorized
-        }
-        else
-        {
-            @ChildContent
-        }
+        @Authorized
     }
     else
     {
-        @NotAuthorized
+        @ChildContent
     }
-</CascadingAuthenticationState>
+}
+else
+{
+    @NotAuthorized
+}
 
 @code {
     [Parameter] public string Feature { get; set; }
@@ -67,4 +65,5 @@
         isLoading = false;
         StateHasChanged();
     }
+
 }

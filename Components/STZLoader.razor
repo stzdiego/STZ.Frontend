@@ -1,0 +1,40 @@
+@using STZ.Frontend.Services
+@using MudBlazor
+@inject LoaderService LoaderService
+@implements IDisposable
+
+<MudOverlay Visible="Visible">
+    <MudPaper Class="d-flex flex-column align-center justify-center pa-6 rounded" Elevation="4">
+        <MudImage Src="images/loading.svg" />
+        <MudText Typo="Typo.h6" Class="mt-4">
+            <STZText Key="@Text"/>
+        </MudText>
+    </MudPaper>
+</MudOverlay>
+
+@code {
+    [Parameter] public string Text { get; set; } = "";
+    [Parameter] public bool Visible { get; set; } = false;
+
+    protected override void OnInitialized()
+    {
+        LoaderService.OnShow += Show;
+        LoaderService.OnHide += Hide;
+    }
+
+    private void Show(string message)
+    {
+        Visible = true;
+        Text = message;
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void Hide() => Visible = false;
+
+    public void Dispose()
+    {
+        LoaderService.OnShow -= Show;
+        LoaderService.OnHide -= Hide;
+    }
+
+}

@@ -1,8 +1,16 @@
 @inject LocalizationService Localization
 @using STZ.Frontend.Services
+@using MudBlazor
 @implements IDisposable
 
-<span>@_text</span>
+@if (!Localization.IsInitialized)
+{
+    <MudProgressCircular Size="Size.Small" Indeterminate="true" Class="ml-1 d-inline-block" />
+}
+else
+{
+    <span>@_text</span>
+}
 
 @code {
     [Parameter] public string Key { get; set; } = string.Empty;

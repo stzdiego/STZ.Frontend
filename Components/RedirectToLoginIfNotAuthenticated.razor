@@ -1,24 +1,29 @@
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
+@using MudBlazor
 @inject NavigationManager Navigation
 @inject AuthenticationStateProvider AuthStateProvider
 
 <AuthorizeView>
-    <Authorized>
-        <p><STZText Key="Login.NoAuthorized" /></p>
-    </Authorized>
-    <NotAuthorized>
-        @code {
-            protected override async Task OnInitializedAsync()
-            {
-                var authState = await AuthStateProvider.GetAuthenticationStateAsync();
-                var user = authState.User;
-
-                if (user == null || !user.Identity.IsAuthenticated)
-                {
-                    Navigation.NavigateTo("authentication/login", forceLoad: true);
-                }
-            }
-        }
-    </NotAuthorized>
+    <LayoutView Layout="Layout">
+        <MudContainer Class="mt-4">
+            <MudText Typo="Typo.h4"><STZText Key="Login.NoAuthorized.Title"/></MudText>
+            <MudText Typo="Typo.body1"><STZText Key="Login.NoAuthorized.Text"/></MudText>
+        </MudContainer>
+    </LayoutView>
 </AuthorizeView>
+
+@code {
+    [Parameter] public Type Layout { get; set; }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user == null || !user.Identity.IsAuthenticated)
+        {
+            Navigation.NavigateTo("authentication/login", forceLoad: true);
+        }
+    }
+}

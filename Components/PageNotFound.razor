@@ -1,0 +1,11 @@
+@using MudBlazor
+
+<LayoutView Layout="Layout">
+    <MudText Typo="Typo.h4"><STZText Key="App.PageNotFound.Title" /></MudText>
+    <MudText Typo="Typo.body1"><STZText Key="App.PageNotFound.Text" /></MudText>
+</LayoutView>
+
+
+@code {
+    [Parameter] public Type Layout { get; set; }
+}
