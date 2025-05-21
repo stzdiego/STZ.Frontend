@@ -7,21 +7,7 @@
 
 @if (ShowToolbarTitle)
 {
-    <MudPaper Class="py-1 px-2 mt-2">
-        <MudStack Row AlignItems="AlignItems.Center">
-            <MudText Typo="Typo.h6">
-                <STZText Key="@Title"/>
-            </MudText>
-            <MudSpacer/>
-            @if (AddComponentType is not null)
-            {
-                <STZAuthorizeView Feature="@Feature" Action="Add">
-                    <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Medium"
-                                   OnClick="@(() => ShowAddDialog())"/>
-                </STZAuthorizeView>
-            }
-        </MudStack>
-    </MudPaper>
+    <STZToolbarTitle AddComponentType="@AddComponentType" Feature="@Feature" OnClick="@ShowAddDialog" Title="@Title" />
 }
 
 

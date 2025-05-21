@@ -14,12 +14,15 @@ public partial class STZEntityField<TItem> : ComponentBase
 
     [Parameter] public string PropertyName { get; set; }
     [Parameter] public string Label { get; set; } = string.Empty;
-    [Parameter] public TItem SelectedItem { get; set; }
+    [Parameter] public TItem? SelectedItem { get; set; }
     [Parameter] public EventCallback<TItem> SelectedItemChanged { get; set; }
     [Parameter] public Type? AddComponentType { get; set; }
+    [Parameter] public bool DeleteButton { get; set; }
 
     private List<TItem> _items = new();
     private string _label;
+    private MudAutocomplete<TItem> _autocompleteRef;
+    private bool _suppressSearch = false;
 
     protected async override Task OnInitializedAsync()
     {
@@ -38,6 +41,12 @@ public partial class STZEntityField<TItem> : ComponentBase
 
     private Task<IEnumerable<TItem>> SearchItems(string? value, CancellationToken cancellationToken)
     {
+        if (_suppressSearch)
+        {
+            _suppressSearch = false;
+            return Task.FromResult(Enumerable.Empty<TItem>());
+        }
+        
         if (string.IsNullOrWhiteSpace(value))
             return Task.FromResult(_items.AsEnumerable());
 
@@ -50,6 +59,12 @@ public partial class STZEntityField<TItem> : ComponentBase
     {
         SelectedItem = value;
         await SelectedItemChanged.InvokeAsync(value);
+        
+        // Cierra el menú y quita el foco
+        _suppressSearch = true;
+        await Task.Delay(100);
+        await _autocompleteRef.CloseMenuAsync();
+        await _autocompleteRef.BlurAsync();
     }
 
     private async Task OnAdd()
@@ -72,6 +87,33 @@ public partial class STZEntityField<TItem> : ComponentBase
                     await OnRefresh();
                 }
             });
+    }
+
+    private async Task OnDelete()
+    {
+        var parameters = new DialogParameters<DeleteDialog>
+        {
+            { x => x.ContentText, Localization.Get("General.Confirmation") },
+            { x => x.ButtonText, Localization.Get("General.Delete") },
+            { x => x.Color, Color.Error }
+        };
+        
+        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+        var dialog = await DialogService.ShowAsync<DeleteDialog>("Eliminar", parameters, options);
+        var result = await dialog.Result;
+        
+        if (result?.Canceled == true)
+        {
+            Snackbar.Add(Localization.Get("General.Deleted.Canceled"), Severity.Info);
+        }
+        else
+        {
+            await EntityService.DeleteAsync(SelectedItem!.GetType().GetProperty("Id")?.GetValue(SelectedItem));
+            SelectedItem = null;
+            await SelectedItemChanged.InvokeAsync(null);
+            await OnRefresh();
+            Snackbar.Add(Localization.Get("General.RegisterDeleted"), Severity.Success);
+        }
     }
 
     private async Task OnRefresh()

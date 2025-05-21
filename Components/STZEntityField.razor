@@ -5,7 +5,7 @@
 @implements IDisposable
 
 <MudStack Row Justify="Justify.Center" Spacing="1">
-    <MudAutocomplete T="TItem" Label="@_label" Placeholder="Buscar..." 
+    <MudAutocomplete @ref="_autocompleteRef" T="TItem" Label="@_label" Placeholder="Buscar..." 
                      Value="SelectedItem" 
                      ValueChanged="OnSelectedItemChanged"
                      ToStringFunc="item => item?.GetType().GetProperty(PropertyName)?.GetValue(item, null)?.ToString()"
@@ -13,6 +13,10 @@
     @if (AddComponentType is not null)
     {
         <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Medium" OnClick="@OnAdd" />
+    }
+    @if (DeleteButton)
+    {
+        <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Medium" OnClick="@OnDelete" Disabled="@(SelectedItem is null)" />
     }
     <MudIconButton Icon="@Icons.Material.Filled.Refresh" Size="Size.Medium" OnClick="@OnRefresh" />
 </MudStack>

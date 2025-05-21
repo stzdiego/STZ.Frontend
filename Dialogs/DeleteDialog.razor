@@ -1,12 +1,13 @@
 @using MudBlazor
+@using STZ.Frontend.Components
 
 <MudDialog>
     <DialogContent>
-        <MudText>@ContentText</MudText>
+        <MudText><STZText Key="@ContentText" /></MudText>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="@Color" Variant="Variant.Filled" OnClick="Submit">@ButtonText</MudButton>
+        <MudButton OnClick="Cancel"><STZText Key="General.Cancel" /></MudButton>
+        <MudButton Color="@Color" Variant="Variant.Filled" OnClick="Submit"><STZText Key="@ButtonText" /></MudButton>
     </DialogActions>
 </MudDialog>
 @code {
